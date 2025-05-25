@@ -12,10 +12,13 @@ if "user_id" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
+if "pending_input" not in st.session_state:
+    st.session_state.pending_input = ""
+
 user_input = st.text_input("You:", key="input_text")
 send_button = st.button("Send")
 
-if send_button and user_input.strip() != "":
+if send_button and user_input.strip():
     st.session_state.chat_history.append(("You", user_input))
 
     api_url = "https://api.dify.ai/v1/chat-messages"
@@ -43,7 +46,7 @@ if send_button and user_input.strip() != "":
         answer = f"Exception occurred: {str(e)}"
 
     st.session_state.chat_history.append(("Bot", answer))
-    st.session_state.input_text = ""
+    st.experimental_rerun()
 
 for sender, msg in st.session_state.chat_history:
     st.markdown(f"**{sender}**: {msg}")
