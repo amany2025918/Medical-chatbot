@@ -1,9 +1,10 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.title("My Chatbot via Dify")
+st.title("My Dify Chatbot")
 
-# https://udify.app/chat/7LyKFHlhkNxBGX6j
+# Your Dify chatbot public URL
 chatbot_url = "https://udify.app/chat/7LyKFHlhkNxBGX6j"
 
-components.iframe(chatbot_url, height=600, scrolling=True)
+# Embed the chatbot page as an iframe
+components.iframe(chatbot_url, height=700, scrolling=True)
