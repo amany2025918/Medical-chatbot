@@ -13,6 +13,10 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 with st.form("chat_form", clear_on_submit=True):
+    # عرض المحادثة من الأحدث للأقدم
+    for sender, msg in reversed(st.session_state.chat_history):
+        st.markdown(f"**{sender}**: {msg}")
+
     user_input = st.text_input("You:")
     submitted = st.form_submit_button("Send")
 
@@ -44,6 +48,4 @@ with st.form("chat_form", clear_on_submit=True):
             answer = f"Exception occurred: {str(e)}"
 
         st.session_state.chat_history.append(("Bot", answer))
-
-for sender, msg in st.session_state.chat_history:
-    st.markdown(f"**{sender}**: {msg}")
+        st.experimental_rerun()
