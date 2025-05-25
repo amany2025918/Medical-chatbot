@@ -12,41 +12,38 @@ if "user_id" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-if "pending_input" not in st.session_state:
-    st.session_state.pending_input = ""
+with st.form("chat_form", clear_on_submit=True):
+    user_input = st.text_input("You:")
+    submitted = st.form_submit_button("Send")
 
-user_input = st.text_input("You:", key="input_text")
-send_button = st.button("Send")
+    if submitted and user_input.strip():
+        st.session_state.chat_history.append(("You", user_input))
 
-if send_button and user_input.strip():
-    st.session_state.chat_history.append(("You", user_input))
+        api_url = "https://api.dify.ai/v1/chat-messages"
+        api_key = "app-xMPlnMcO01NGxpelaC8QbL9W"
 
-    api_url = "https://api.dify.ai/v1/chat-messages"
-    api_key = "app-xMPlnMcO01NGxpelaC8QbL9W"
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
 
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
+        data = {
+            "inputs": {},
+            "query": user_input,
+            "user": st.session_state.user_id
+        }
 
-    data = {
-        "inputs": {},
-        "query": user_input,
-        "user": st.session_state.user_id
-    }
+        try:
+            response = requests.post(api_url, headers=headers, json=data)
+            if response.status_code == 200:
+                result = response.json()
+                answer = result.get("answer", "Sorry, no response received.")
+            else:
+                answer = f"Error: {response.status_code} - {response.text}"
+        except Exception as e:
+            answer = f"Exception occurred: {str(e)}"
 
-    try:
-        response = requests.post(api_url, headers=headers, json=data)
-        if response.status_code == 200:
-            result = response.json()
-            answer = result.get("answer", "Sorry, no response received.")
-        else:
-            answer = f"Error: {response.status_code} - {response.text}"
-    except Exception as e:
-        answer = f"Exception occurred: {str(e)}"
-
-    st.session_state.chat_history.append(("Bot", answer))
-    st.experimental_rerun()
+        st.session_state.chat_history.append(("Bot", answer))
 
 for sender, msg in st.session_state.chat_history:
     st.markdown(f"**{sender}**: {msg}")
