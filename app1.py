@@ -12,8 +12,10 @@ if "user_id" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
+if "rerun_needed" not in st.session_state:
+    st.session_state.rerun_needed = False
+
 with st.form("chat_form", clear_on_submit=True):
-    # عرض المحادثة من الأحدث للأقدم
     for sender, msg in reversed(st.session_state.chat_history):
         st.markdown(f"**{sender}**: {msg}")
 
@@ -48,4 +50,8 @@ with st.form("chat_form", clear_on_submit=True):
             answer = f"Exception occurred: {str(e)}"
 
         st.session_state.chat_history.append(("Bot", answer))
-        st.experimental_rerun()
+        st.session_state.rerun_needed = True
+
+if st.session_state.rerun_needed:
+    st.session_state.rerun_needed = False
+    st.experimental_rerun()
