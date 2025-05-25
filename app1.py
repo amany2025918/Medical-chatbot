@@ -1,18 +1,4 @@
-import streamlit as st
-import requests
-import uuid
-
-st.set_page_config(page_title="Medical Chatbot", page_icon="🩺")
-st.title("🩺 Medical Chatbot")
-st.write("Ask any medical-related question and get helpful AI-powered answers. Please consult a professional for critical health issues.")
-
-if "user_id" not in st.session_state:
-    st.session_state.user_id = str(uuid.uuid4())
-
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-
-user_input = st.text_input("You:")
+user_input = st.text_input("You:", key="input_text")
 
 if user_input:
     st.session_state.chat_history.append(("You", user_input))
@@ -43,5 +29,5 @@ if user_input:
 
     st.session_state.chat_history.append(("Bot", answer))
 
-for sender, msg in st.session_state.chat_history:
-    st.markdown(f"**{sender}**: {msg}")
+    # امسح مربع النص بعد الإرسال
+    st.session_state.input_text = ""
