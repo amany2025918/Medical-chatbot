@@ -12,12 +12,10 @@ if "user_id" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-if "input_text" not in st.session_state:
-    st.session_state.input_text = ""
-
 user_input = st.text_input("You:", key="input_text")
+send_button = st.button("Send")
 
-if user_input:
+if send_button and user_input.strip() != "":
     st.session_state.chat_history.append(("You", user_input))
 
     api_url = "https://api.dify.ai/v1/chat-messages"
@@ -45,8 +43,6 @@ if user_input:
         answer = f"Exception occurred: {str(e)}"
 
     st.session_state.chat_history.append(("Bot", answer))
-
-    # مسح مربع الإدخال بعد إرسال الرسالة
     st.session_state.input_text = ""
 
 for sender, msg in st.session_state.chat_history:
