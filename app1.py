@@ -1,20 +1,24 @@
 import streamlit as st
 import requests
+import uuid
 
 st.set_page_config(page_title="Medical Chatbot", page_icon="🩺")
 st.title("🩺 Medical Chatbot")
 st.write("Ask any medical-related question and get helpful AI-powered answers. Please consult a professional for critical health issues.")
 
-user_input = st.text_input("You:")
+if "user_id" not in st.session_state:
+    st.session_state.user_id = str(uuid.uuid4())
 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+
+user_input = st.text_input("You:")
 
 if user_input:
     st.session_state.chat_history.append(("You", user_input))
 
     api_url = "https://api.dify.ai/v1/chat-messages"
-    api_key = "app-xMPlnMcO01NGxpelaC8QbL9W"  # replace with your real key
+    api_key = "app-xMPlnMcO01NGxpelaC8QbL9W"
 
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -23,7 +27,8 @@ if user_input:
 
     data = {
         "inputs": {},
-        "query": user_input
+        "query": user_input,
+        "user": st.session_state.user_id
     }
 
     try:
