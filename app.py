@@ -1,50 +1,60 @@
 import streamlit as st
-import requests
+from PIL import Image
 
-# Streamlit page configuration
-st.set_page_config(page_title="Medical Chatbot", page_icon="🩺")
+# ---- PAGE CONFIG ----
+st.set_page_config(
+    page_title="Medical DefyBot",
+    page_icon="🩺",
+    layout="centered"
+)
 
-st.title("🩺 Medical Chatbot")
-st.write("Ask any medical-related question and get helpful AI-powered answers. Please consult a professional for critical health issues.")
+# ---- HEADER ----
+st.markdown("<h1 style='text-align: center;'>🩺 Medical DefyBot</h1>", unsafe_allow_html=True)
 
-# Input field
-user_input = st.text_input("You:")
+st.markdown(
+    """
+    <div style='text-align: center; font-size:18px;'>
+        Welcome to <b>Medical DefyBot</b> — your AI-powered assistant for fast, friendly medical guidance.<br>
+        Built using <a href='https://dify.ai' target='_blank'>Dify AI</a> and available 24/7.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-# Chat history
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+st.markdown("---")
 
-# When user enters input
-if user_input:
-    st.session_state.chat_history.append(("You", user_input))
+# ---- IMAGE (OPTIONAL) ----
+# Uncomment this if you want to show a medical-themed image
+# image = Image.open("medical_bot.png")
+# st.image(image, caption="Your AI Medical Companion", use_column_width=True)
 
-    # API setup
-    api_url = "https://api.dify.ai/v1/chat-messages"
-    api_key = " app-xMPlnMcO01NGxpelaC8QbL9W"  # <-- Replace with your actual key
+# ---- BUTTON ----
+st.markdown(
+    """
+    <div style='text-align: center; margin-top: 30px;'>
+        <a href='https://udify.app/chat/7LyKFHlhkNxBGX6j' target='_blank'>
+            <button style='
+                background-color: #008080;
+                color: white;
+                padding: 14px 24px;
+                font-size: 16px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            '>
+                💬 Launch Chat with Medical DefyBot
+            </button>
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-
-    data = {
-        "inputs": {},  # For apps with input variables, use: {"name": value}
-        "query": user_input
-    }
-
-    # Call the Dify API
-    try:
-        response = requests.post(api_url, headers=headers, json=data)
-        if response.status_code == 200:
-            result = response.json()
-            answer = result.get("answer", "Sorry, no response received.")
-        else:
-            answer = f"Error: {response.status_code} - {response.text}"
-    except Exception as e:
-        answer = f"Exception occurred: {str(e)}"
-
-    st.session_state.chat_history.append(("Bot", answer))
-
-# Display chat history
-for sender, msg in st.session_state.chat_history:
-    st.markdown(f"{sender}: {msg}")
+# ---- FOOTER ----
+st.markdown("---")
+st.markdown(
+    "<div style='text-align: center; font-size: 14px;'>"
+    "Created by Salma | Powered by Dify AI"
+    "</div>",
+    unsafe_allow_html=True
+)
